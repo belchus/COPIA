@@ -28,7 +28,7 @@
   </article>
   <section class="col-md-12">
     <h5 class="mb-3">Replys</h5>
-    {% if reply.rev %}
+    {% if replys.all %}
     <ul class="p-0">
       {% for reply in replys.all %}
       <li>
@@ -36,7 +36,7 @@
           <span
             class="gradient rounded px-2"
             style="font-size: 1.2rem; margin-top: 1rem"
-            >{{reply.username}}</span
+            >{{reply.title}}</span
           >
           <p class="comment-bg rounded my-1">{{reply.reply}}</p>
           {% if user.is_authenticated and req == reply.username.username %}
@@ -57,14 +57,16 @@
     {% endif %}
   </section>
   {% if user.is_authenticated %}
-  <form action="" method="POST">
-    {% csrf_token %}{% for field in AddReview %} {{field.label}}
-    <br />
-    {{form.media}} {{field}}
-    <br />
-    {%endfor%}
-    <input class="btn btn-primary mb-3 p-2" type="submit" value="Reply" />
-  </form>
+    <form  action="{% url 'detail_reviews' review.id %}" method="POST"> 
+      {% csrf_token %}{% for field in AddReview %} {{field.label}}
+      <br />
+      {{form.media}} {{field}}
+    
+      <br />
+      {%endfor%}
+      {{ AddReply.as_table }}
+      <input class="btn btn-primary mb-3 p-2" type="submit" value="Reply" />
+    </form>
 </div>
 
 {% endif %} 

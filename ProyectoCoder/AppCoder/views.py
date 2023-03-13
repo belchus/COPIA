@@ -220,28 +220,30 @@ def detail_reviews(request, pk):
     review = Review.objects.get(id=pk)
     user = User.objects.get(username=request.user.username)
     if request.method == 'POST':
-        newReply= AddReply(request.POST)
-        if  newReply.is_valid():
-            data =  newReply.cleaned_data
+        newReply = AddReply(request.POST)
+        if newReply.is_valid():
+            data = newReply.cleaned_data
 
-            new_rev = Reply( 
-                                  text = data['text'],
-                                  title = data['title'],
-                                  user=user,
-                                  review =review)
+            new_rev = Reply(
+                text=data['text'],
+                title=data['title'],
+                user=user,
+                review=review)
             new_rev.save()
             return redirect(f'/revdetail/{review.id}')
     else:
-            newReply= AddReply()
-    all_reviews = Review.objects.filter(id=review.id)
+        newReply = AddReply()
+    all_reviews = Review.objects.filter(id=user.id)
     rev = len(all_reviews) > 0
-
     rev_context = {'all': all_reviews, 'rev': rev}
-    context= {'review': review, 'req': str(request.user), 
-              'replys':rev_context, 
-              'AddReply':AddReply}
-    
+    context = {'review': review, 'req': str(request.user),
+               'replys': rev_context,
+               'AddReply': AddReply()}
+
     return render(request, 'revdetail.html', context)
+
+
+
 
 #Funcion para eliminar la respuesta
 
