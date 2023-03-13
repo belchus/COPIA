@@ -36,7 +36,7 @@ class AddNewReview(ModelForm):
 class AddReply(ModelForm):
     class Meta:
         model = Review
-        fields =   ['title','text']
+        fields =   '__all__'
         widgets ={
             'review': forms.Textarea(attrs={'class': 'form-control','placeholder': 'Dejar MovieReview' }),
             

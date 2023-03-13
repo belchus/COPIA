@@ -65,8 +65,8 @@ def add_form(request):
 @login_required
 def review_form(request,pk=0):
     form = AddNewReview()
-    pk = request.user.username
-    print(pk)
+    user= User.objects.get(username=request.user.username)
+    print(user)
 
     if request.method == 'POST':
         form = AddNewReview(request.POST,request.FILES)
@@ -74,7 +74,7 @@ def review_form(request,pk=0):
             data = form.cleaned_data
            
             new_review = Review(
-                            user=pk,
+                            user=user,
                             title = data['title'],
                             text = data['text'],
                             stars = data['stars'])
@@ -218,9 +218,7 @@ def all_reviews(request):
 
 def detail_reviews(request, pk):
     review = Review.objects.get(id=pk)
-
-    newReply = AddReply()
-
+    user = User.objects.get(username=request.user.username)
     if request.method == 'POST':
         newReply= AddReply(request.POST)
         if  newReply.is_valid():
@@ -228,10 +226,14 @@ def detail_reviews(request, pk):
 
             new_rev = Reply( 
                                   text = data['text'],
-                                  title = data['title'])
+                                  title = data['title'],
+                                  user=user,
+                                  review =review)
             new_rev.save()
             return redirect(f'/revdetail/{review.id}')
-    all_reviews = Reply.objects.filter(id=review.id)
+    else:
+            newReply= AddReply()
+    all_reviews = Review.objects.filter(id=review.id)
     rev = len(all_reviews) > 0
 
     rev_context = {'all': all_reviews, 'rev': rev}
